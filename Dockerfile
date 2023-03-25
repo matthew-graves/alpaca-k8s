@@ -1,13 +1,14 @@
 FROM registry.hub.docker.com/nvidia/cuda:11.8.0-runtime-ubuntu22.04
 
 RUN apt-get update
-RUN apt install -y wget git python3 python3-pip python3-virtualenv bash
+RUN apt install -y wget git python3 python3-pip python3-virtualenv bash cuda-toolkit-11-8 cuda-11-8
 
 RUN useradd alpaca
 RUN mkdir /app
 RUN mkdir /home/alpaca
 RUN chown -R alpaca:alpaca /home/alpaca
 RUN chown alpaca:alpaca /app
+RUN ln -s /usr/local/cuda /usr/local/nvidia
 
 USER alpaca
 WORKDIR /app
