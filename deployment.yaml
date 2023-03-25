@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alpaca-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alpaca
+  template:
+    metadata:
+      labels:
+        app: alpaca
+    spec:
+      runtimeClassName: nvidia
+      containers:
+      - name: alpaca-container
+        image: ghcr.io/matthew-graves/alpaca-k8s:main
+        resources:
+          limits:
+            nvidia.com/gpu: 1
