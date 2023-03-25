@@ -15,7 +15,7 @@ spec:
       runtimeClassName: nvidia
       containers:
       - name: alpaca-container
-        image: ghcr.io/matthew-graves/alpaca-k8s:main
+        image: ghcr.io/matthew-graves/alpaca-k8s:v0.0.1
         resources:
           limits:
             nvidia.com/gpu: 1

@@ -19,4 +19,4 @@ RUN . venv/bin/activate && pip install -r requirements.txt
 ENV BASE_URL='decapoda-research/llama-7b-hf'
 ENV FINETUNED_CKPT_URL='tloen/alpaca-lora-7b'
 
-CMD . venv/bin/activate && exec python --base_url $BASE_URL --ft_ckpt_url $FINETUNED_CKPT_URL --port 6006
+CMD . venv/bin/activate && exec python app.py --base_url $BASE_URL --ft_ckpt_url $FINETUNED_CKPT_URL --port 6006
