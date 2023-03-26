@@ -1,30 +1,22 @@
-FROM registry.hub.docker.com/nvidia/cuda:11.8.0-runtime-ubuntu22.04
+FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
 
-RUN apt-get update
-RUN apt install -y wget git python3 python3-pip python3-virtualenv bash
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN useradd alpaca
-RUN mkdir /app
-RUN mkdir /home/alpaca
-RUN chown -R alpaca:alpaca /home/alpaca
-RUN chown alpaca:alpaca /app
-RUN ln -s /usr/local/cuda /usr/local/nvidia
-RUN ln -s /usr/local/cuda/lib64/ibcudart.so.11.8.89 /usr/local/cuda/lib64/libcudart.so
+# enter the base model weights you wish to use here, like "decapoda-research/llama-7b-hf"
+ENV BASE_MODEL="decapoda-research/llama-7b-hf"
 
-USER alpaca
-WORKDIR /app
-
-RUN git clone https://github.com/deep-diver/Alpaca-LoRA-Serve .
-RUN virtualenv venv
-RUN . venv/bin/activate && pip install -r requirements.txt
-
-ENV BASE_URL='decapoda-research/llama-7b-hf'
-ENV FINETUNED_CKPT_URL='tloen/alpaca-lora-7b'
-
-# # Disgusting fix for cuda libs not working right
-# WORKDIR /app/venv/lib/python3.10/site-packages/bitsandbytes
-# RUN cp libbitsandbytes_cuda118.so libbitsandbytes_cpu.so
-
-WORKDIR /app
-
-CMD . venv/bin/activate && exec python app.py --base_url $BASE_URL --ft_ckpt_url $FINETUNED_CKPT_URL --port 6006
+# since bytesands will use the installed cuda version, I have fixed to 11.8 and cannot use easily torch2.0 or nvidia with pytorch containers
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt install -y python3.10 \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /workspace
+COPY requirements.txt requirements.txt
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 \
+    && python3.10 -m pip install -r requirements.txt \
+    && python3.10 -m pip install numpy --pre torch --force-reinstall --index-url https://download.pytorch.org/whl/nightly/cu118
+COPY . .
+ENTRYPOINT [ "python3.10" "generate.py"]
