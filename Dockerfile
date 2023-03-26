@@ -21,9 +21,9 @@ RUN . venv/bin/activate && pip install -r requirements.txt
 ENV BASE_URL='decapoda-research/llama-7b-hf'
 ENV FINETUNED_CKPT_URL='tloen/alpaca-lora-7b'
 
-# Disgusting fix for cuda libs not working right
-WORKDIR /app/venv/lib/python3.10/site-packages/bitsandbytes
-RUN cp libbitsandbytes_cuda118.so libbitsandbytes_cpu.so
+# # Disgusting fix for cuda libs not working right
+# WORKDIR /app/venv/lib/python3.10/site-packages/bitsandbytes
+# RUN cp libbitsandbytes_cuda118.so libbitsandbytes_cpu.so
 
 WORKDIR /app
 
