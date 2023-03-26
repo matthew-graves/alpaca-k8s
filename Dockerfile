@@ -9,6 +9,7 @@ RUN mkdir /home/alpaca
 RUN chown -R alpaca:alpaca /home/alpaca
 RUN chown alpaca:alpaca /app
 RUN ln -s /usr/local/cuda /usr/local/nvidia
+RUN ln -s /usr/local/cuda/lib64/ibcudart.so.11.8.89 /usr/local/cuda/lib64/libcudart.so
 
 USER alpaca
 WORKDIR /app
